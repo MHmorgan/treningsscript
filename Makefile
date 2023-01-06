@@ -18,5 +18,4 @@ status: $(CONF)
 	cd src && clasp status
 
 $(CONF):
-	echo '{"scriptId":"<script-id>", "rootDir":"${PWD}/src"}' > src/.clasp.json
-
+	echo '{"scriptId":"1EcmC727o3JoS-snKx-16wJnK-q4ZlAWHraqd2Hc7CFyz1c6ja_gO4a5I", "rootDir":"${PWD}/src"}' > src/.clasp.json
