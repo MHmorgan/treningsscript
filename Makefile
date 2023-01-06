@@ -1,6 +1,12 @@
 CONF=src/.clasp.JSON
 
-all: watch
+all: build
+
+build:
+	elm make --optimize elm/Main.elm --output=src/index.html
+
+pull: $(CONF)
+	cd src && clasp pull
 
 push: $(CONF)
 	cd src && clasp push
