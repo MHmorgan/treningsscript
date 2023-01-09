@@ -1,2 +1,12 @@
-.idea
+# Config
 .clasp.json
+
+# Intellij stuff
+.idea
+
+# ELM stuff
+elm-stuff
+
+# Build files
+elm.js
+elm.min.js
