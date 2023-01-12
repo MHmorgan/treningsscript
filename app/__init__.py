@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from werkzeug.exceptions import BadRequest
 
 from . import (
@@ -18,8 +18,11 @@ def create_app():
 
     @app.route('/')
     def index():
-        # TODO Return main app page
-        return "Hello World!"
+        return send_from_directory('static', 'index.html')
+
+    @app.route('/<path:path>')
+    def static_proxy(path):
+        return send_from_directory('static', path)
 
     ############################################################################
     # Exercises
