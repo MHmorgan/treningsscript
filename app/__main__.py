@@ -4,14 +4,18 @@ import sys
 import click
 from click import echo, secho, style
 
+# Must import everything "from app" to
+# get the app context.
 import app
-import config
-import db
-import exercise
-import session
-import warmup
-from exceptions import AppError
-from utils import to_json
+from app import (
+    config,
+    db,
+    exercise,
+    session,
+    warmup,
+)
+from app.exceptions import AppError
+from app.utils import to_json
 
 
 @click.group()
@@ -30,7 +34,6 @@ def web(host, port):
 @cli.command()
 def initdb():
     """Initialize the database."""
-    import db
     db.init()
 
 
