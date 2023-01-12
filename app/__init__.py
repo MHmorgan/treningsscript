@@ -20,9 +20,13 @@ def create_app():
     def index():
         return send_from_directory('static', 'index.html')
 
-    @app.route('/<path:path>')
+    @app.route('/<any>')
+    def catchall(*args, **kwargs):
+        return send_from_directory('static', 'index.html')
+
+    @app.route('/js/<path:path>')
     def static_proxy(path):
-        return send_from_directory('static', path)
+        return send_from_directory('static/js', path)
 
     ############################################################################
     # Exercises
