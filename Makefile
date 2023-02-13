@@ -1,6 +1,6 @@
 
-JS=app/static/elm.js
-MIN=app/static/elm.min.js
+JS=app/static/js/elm.js
+MIN=app/static/js/elm.min.js
 
 IMG=treningserver
 
@@ -22,5 +22,13 @@ build-elm:
 	elm make --optimize elm/Main.elm --output=$(JS)
 	uglifyjs $(JS) --compress 'pure_funcs=[F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9],pure_getters,keep_fargs=false,unsafe_comps,unsafe' | uglifyjs --mangle --output $(MIN)
 
+build-debug-elm:
+	elm make elm/Main.elm --output=$(JS)
+	uglifyjs $(JS) --compress 'pure_funcs=[F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9],pure_getters,keep_fargs=false,unsafe_comps,unsafe' | uglifyjs --mangle --output $(MIN)
+
 build-docker:
 	docker build -t $(IMG) app
+
+watch-elm:
+	./scripts/watch-elm.zsh
+
