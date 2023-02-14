@@ -28,15 +28,10 @@ API
 `/` - Index page
 `/js/<path>` - Javascript resources
 
-`GET  /api/exercises` - List of exercise objects
-`POST /api/exercises` - Create a new exercise
-`GET  /api/exercises/<name>` - Get an exercise object
-`POST /api/exercises/<name>` - Add an exercise entry
-
-`GET  /api/warmups` - List of warmup objects
-`POST /api/warmups` - Create a new warmup
-`GET  /api/warmups/<name>` - Get a warmup object
-`POST /api/warmups/<name>` - Add a warmup entry
+`GET  /api/exercises` - List of exercise objects  
+`POST /api/exercises` - Create a new exercise  
+`GET  /api/exercises/<name>` - Get an exercise object  
+`POST /api/exercises/<name>` - Add an exercise entry  
 
 `GET  /api/sessions` - List of session objects
 `POST /api/sessions` - Record a new session
@@ -52,24 +47,10 @@ API
   "entries": [
     {
       "date": date/string
-      "reps": [int]
+      "reps": int
+      "sets": int
       "weight": int?
       "onerepmax": int?
-    }
-  ]
-}
-```
-
-
-### Warmup object
-
-```
-{
-  "name": string
-  "entries": [
-    {
-      "date": date/string
-      "intervals": [int]
     }
   ]
 }
