@@ -12,7 +12,6 @@ from app import (
     db,
     exercise,
     session,
-    warmup,
 )
 from app.exceptions import AppError
 from app.utils import to_json
@@ -128,37 +127,6 @@ def delete_entry(name, num):
             return
         del ex['entries'][num - 1]
         ex.db_update(cur)
-
-
-# Warmups
-
-@cli.group()
-def warmups():
-    """Manage warmups."""
-    pass
-
-
-@warmups.command('new')
-@click.argument('name')
-def new_warmup(name):
-    """Create a new warmup."""
-    with db.cursor() as cur:
-        warmup.new(cur, name)
-
-
-@warmups.command('list')
-def list_warmups():
-    """List warmups."""
-    with db.cursor() as cur:
-        ws = warmup.get_all(cur)
-
-    if not ws:
-        echo('No warmups found.')
-        return
-
-    name_width = max(len(w['name']) for w in ws)
-    for w in ws:
-        pprint_warmup(w, name_width=name_width)
 
 
 # Session

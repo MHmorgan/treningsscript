@@ -8,7 +8,6 @@ from . import (
     db,
     exercise,
     session,
-    warmup,
 )
 from .exceptions import AppError
 
@@ -67,47 +66,6 @@ def create_app():
                 raise BadRequest(f'exercise entry missing: {e}')
             except AppError as e:
                 raise BadRequest(str(e))
-        return 'Created', 201
-
-    ############################################################################
-    # Warmups
-
-    @app.route('/api/warmups')
-    def all_warmups():
-        with db.cursor() as cur:
-            ws = warmup.get_all(cur)
-        return [w.data for w in ws]
-
-    @app.route('/api/warmups', methods=['POST'])
-    def add_warmup():
-        data = request.json
-        with db.cursor() as cur:
-            try:
-                warmup.new(cur, data['name'])
-            except KeyError as e:
-                raise BadRequest(f'warmup missing: {e}')
-            except AppError as e:
-                raise BadRequest(str(e))
-        return 'Created', 201
-
-    @app.route('/api/warmups/<warmup_name>')
-    def get_warmup(warmup_name):
-        with db.cursor() as cur:
-            w = warmup.get(cur, warmup_name)
-        return w.data
-
-    @app.route('/api/warmups/<warmup_name>', methods=['POST'])
-    def add_warmup_entry(warmup_name):
-        data = request.json
-        with db.cursor() as cur:
-            try:
-                w = warmup.get(cur, warmup_name)
-                w.add_entry(data['date'], data['intervals'])
-                w.db_update(cur)
-            except AppError as e:
-                raise BadRequest(str(e))
-            except KeyError as e:
-                raise BadRequest(f'Warmup entry missing: {e}')
         return 'Created', 201
 
     ############################################################################

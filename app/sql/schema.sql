@@ -1,12 +1,8 @@
 
 CREATE TABLE Exercises (
 	name TEXT PRIMARY KEY,
-	daytype TEXT,
-	object NOT NULL
-) WITHOUT ROWID;
-
-CREATE TABLE Warmups (
-	name TEXT PRIMARY KEY,
+    daytype TEXT,
+    weighttype TEXT,
 	object NOT NULL
 ) WITHOUT ROWID;
 
