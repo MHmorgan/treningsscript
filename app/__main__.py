@@ -103,16 +103,14 @@ def show(name, json_out):
 @exercises.command()
 @click.argument('name')
 @click.argument('date', type=click.DateTime())
-@click.argument('reps', type=int, nargs=-1)
+@click.argument('reps', type=int)
+@click.argument('sets', type=int)
 @click.option('-w', '--weight', type=float)
 @click.option('-r', '--onerepmax', type=int)
-def entry(name, date, weight, onerepmax, reps):
+def entry(name, date, weight, onerepmax, reps, sets):
     """Add an entry to an exercise."""
-    if len(reps) < 1:
-        secho('You must specify the reps for at least one set.', fg='red')
-        return
     with db.cursor() as cur:
-        exercise.add_entry(cur, name, date, reps, weight, onerepmax)
+        exercise.add_entry(cur, name, date, reps, sets, weight, onerepmax)
 
 
 @exercises.command()
@@ -159,24 +157,10 @@ def pprint_exercise(e, with_entries=False, name_width=0):
     for i, entry in enumerate(e['entries']):
         date = entry['date']
         weight = entry['weight'] or '?'
-        reps = ','.join(str(r) for r in entry['reps'])
+        reps = entry['reps']
+        sets = entry['sets']
         onerepmax = entry['onerepmax'] or '?'
-        echo(f'{i+1}. {date}  {reps} reps  {weight}kg  {onerepmax} 1RM')
-
-
-def pprint_warmup(w, with_entries=False, name_width=0):
-    name = style(f'{w.name:<{name_width}}', bold=True)
-    num = len(w.entries)
-    echo(f'{name}  {num} entries')
-
-    if not (w['entries'] and with_entries):
-        return
-
-    echo('Entries:')
-    for i, entry in enumerate(w.entries):
-        date = entry['date']
-        reps = ','.join(str(r) for r in entry['intervals'])
-        echo(f'{i+1}. {date}  {reps} intervals')
+        echo(f'{i+1}. {date}  {reps} reps {sets} sets  {weight}kg  {onerepmax} 1RM')
 
 
 if __name__ == '__main__':

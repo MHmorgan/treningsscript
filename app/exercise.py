@@ -49,10 +49,10 @@ class Exercise(UserDict):
     def to_json(self, **kwargs):
         return json.dumps(self.data, **kwargs)
 
-    def add_entry(self, date, reps, weight=None, onerepmax=None):
+    def add_entry(self, date, reps, sets, weight=None, onerepmax=None):
         try:
-            assert isinstance(reps, list), 'reps must be a list'
-            assert all(isinstance(r, int) for r in reps), 'reps must be ints'
+            assert isinstance(reps, int), 'reps must be an integer'
+            assert isinstance(sets, int), 'sets must be an integer'
             date = normalize_date(date)
         except (AssertionError, AppError) as e:
             raise AppError(f'bad exercise entry: {e}') from e
@@ -61,6 +61,7 @@ class Exercise(UserDict):
             'date': date,
             'weight': weight,
             'reps': reps,
+            'sets': sets,
             'onerepmax': onerepmax,
         })
 
@@ -124,8 +125,8 @@ def get(cur, name):
     return Exercise.from_row(row)
 
 
-def add_entry(cur, name, date, reps, weight=None, onerepmax=None):
+def add_entry(cur, name, date, reps, sets, weight=None, onerepmax=None):
     date = normalize_date(date)
     ex = get(cur, name)
-    ex.add_entry(date, reps, weight, onerepmax)
+    ex.add_entry(date, reps, sets, weight, onerepmax)
     ex.db_update(cur)
