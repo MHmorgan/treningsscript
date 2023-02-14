@@ -80,10 +80,10 @@ class Exercise(UserDict):
         """Updates the exercise in the database."""
         sql = '''
             UPDATE Exercises
-            SET daytype=?, object=?
+            SET object=?
             WHERE name=?
         '''
-        values = (self.daytype, self.to_json(), self.name)
+        values = (self.to_json(), self.name)
         try:
             cur.execute(sql, values)
         except sqlite3.IntegrityError as e:
@@ -125,8 +125,7 @@ def get(cur, name):
 
 
 def add_entry(cur, name, date, reps, weight=None, onerepmax=None):
-    date = utils.normalize_date(date)
+    date = normalize_date(date)
     ex = get(cur, name)
     ex.add_entry(date, reps, weight, onerepmax)
     ex.db_update(cur)
-
