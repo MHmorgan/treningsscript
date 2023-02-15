@@ -51,10 +51,10 @@ class Exercise(UserDict):
 
     def add_entry(self, date, reps, sets, weight=None, onerepmax=None):
         try:
-            assert isinstance(reps, int), 'reps must be an integer'
-            assert isinstance(sets, int), 'sets must be an integer'
+            reps = int(reps)
+            sets = int(sets)
             date = normalize_date(date)
-        except (AssertionError, AppError) as e:
+        except (ValueError, AppError) as e:
             raise AppError(f'bad exercise entry: {e}') from e
 
         self['entries'].append({

@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, request, send_from_directory
+from click import echo
 from werkzeug.exceptions import BadRequest
 
 from . import (
@@ -57,14 +58,17 @@ def create_app():
     @app.route('/api/exercises/<exercise_name>', methods=['POST'])
     def add_exercise_entry(exercise_name):
         data = request.json
+        echo(f'{data=}')
         with db.cursor() as cur:
             try:
                 ex = exercise.get(cur, exercise_name)
-                ex.add_entry(data['date'], data['reps'], data['weight'], data['onerepmax'])
+                ex.add_entry(data['date'], data['reps'], data['sets'], data.get('weight'), data.get('onerepmax'))
                 ex.db_update(cur)
             except KeyError as e:
+                echo(f'KeyError: {e}')
                 raise BadRequest(f'exercise entry missing: {e}')
             except AppError as e:
+                echo(f'AppError: {e}')
                 raise BadRequest(str(e))
         return 'Created', 201
 
