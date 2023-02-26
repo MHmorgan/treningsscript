@@ -1,3 +1,4 @@
+from pathlib import Path
 import sqlite3
 from contextlib import contextmanager
 from importlib.resources import files
@@ -23,6 +24,8 @@ def close_db(e=None):
 
 
 def init_db():
+    if not (p := Path(config.DATABASE)).exists():
+        p.touch()
     db = get_db()
     with current_app.open_resource('sql/schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
