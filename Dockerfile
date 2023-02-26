@@ -15,5 +15,7 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
+EXPOSE 8000
+
 #CMD ["python3", "-m", "flask", "run", "-h", "0.0.0.0", "-p", "8000"]
 CMD ["python3", "-m", "gunicorn", "--workers", "2", "--bind", "0.0.0.0:8000", "app:create_app()"]
