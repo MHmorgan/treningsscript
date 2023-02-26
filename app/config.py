@@ -15,3 +15,5 @@ DAY_TYPES = (
     'Core',
     'Cardio'
 )
+
+TZ = datetime.now().astimezone().tzinfo

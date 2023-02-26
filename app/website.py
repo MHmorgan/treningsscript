@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 import math
 from flask import (
@@ -18,18 +18,10 @@ bp = Blueprint('website', __name__)
 @bp.route('/')
 def index():
     if 'abort-session' in request.args:
-        if 'session' in flask_session:
-            del flask_session['session']
+        abort_session()
         return redirect('/')
     if 'finish-session' in request.args:
-        if s := flask_session.get('session'):
-            duration = math.floor(datetime.now().timestamp() - s['timestamp'])
-            session.new(
-                s['date'],
-                duration,
-                s['daytype'],
-            )
-            del flask_session['session']
+        finish_session()
         return redirect('/')
 
     context = {
@@ -42,16 +34,11 @@ def index():
 
 @bp.route('/session')
 def session_page():
+    if 'daytype' in request.args:
+        start_session(request.args['daytype'])
+
     if 'session' in flask_session:
         s = flask_session['session']
-    elif 'daytype' in request.args:
-        start = datetime.now()
-        s = {
-            'daytype': request.args['daytype'],
-            'date': normalize_date(start),
-            'timestamp': start.timestamp(),
-        }
-        flask_session['session'] = s
     else:
         return redirect('/')
 
@@ -93,3 +80,34 @@ def entry_page(name):
         'session': flask_session['session'],
     }
     return render_template('entry.html', **context)
+
+
+################################################################################
+# Helpers
+
+
+def start_session(daytype):
+    start = datetime.now(config.TZ)
+    s = {
+        'daytype': daytype,
+        'date': normalize_date(start),
+        'timestamp': start.timestamp(),
+        'iso_date': start.isoformat(),
+    }
+    flask_session['session'] = s
+
+
+def finish_session():
+    if s := flask_session.get('session'):
+        duration = math.floor(datetime.now().timestamp() - s['timestamp'])
+        session.new(
+            s['date'],
+            duration,
+            s['daytype'],
+        )
+        del flask_session['session']
+
+
+def abort_session():
+    if 'session' in flask_session:
+        del flask_session['session']

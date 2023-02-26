@@ -23,17 +23,55 @@
 <body>
 
 
-<header id="title"
-        class="container-fluid py-3 mb-3 text-bg-success bg-opacity-75">
-  <div class="container">
-    <h1 class="display-1">
-      {{ title }}
-    </h1>
-  </div>
-</header>
+{% with style='padding-bottom: 1rem; padding-top: 1rem',
+        classes='text-bg-success bg-opacity-75' %}
+  {% if session %}
+    <header class="container-fluid {{ classes }}" style="{{ style }}">
+      <div class="container">
+        <h1 id="stopwatch" class="w-100 text-center display-3"></h1>
+      </div>
+    </header>
+
+    <div class="container-fluid text-bg-secondary bg-opacity-50"
+         style="padding-bottom: 0.1rem; padding-top: 0.1rem">
+      <div class="container">
+        <h2 class="w-100 text-center display-6">{{ title }}</h2>
+      </div>
+    </div>
+
+    <script>
+        (function () {
+            const stopwatch = document.getElementById('stopwatch');
+            const started = new Date('{{ session.iso_date }}');
+
+            function pad(num) {
+                return num.toString().padStart(2, '0');
+            }
+
+            function updateStopwatch() {
+                const now = new Date();
+                const time = new Date(now - started);
+                const hours = pad(time.getUTCHours());
+                const minutes = pad(time.getUTCMinutes());
+                const seconds = pad(time.getUTCSeconds());
+                stopwatch.innerText = `${hours}:${minutes}:${seconds}`;
+            }
+
+            updateStopwatch();
+            setInterval(updateStopwatch, 1000);
+        })()
+    </script>
+  {% else %}
+    <header class="container-fluid {{ classes }}" style="{{ style }}">
+      <div class="container">
+        <h1 class="w-100 text-center display-3">{{ title }}</h1>
+      </div>
+    </header>
+  {% endif %}
+{% endwith %}
 
 
-<main id="content" class="container">
+<main id="content" class="container mt-3">
   {% block content required %}{% endblock %}
 </main>
 
