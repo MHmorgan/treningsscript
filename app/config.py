@@ -1,5 +1,8 @@
 
-DATABASE = 'db.sqlite'
+from os import environ
+from datetime import datetime
+
+DATABASE = environ.get('DATABASE', 'db.sqlite')
 
 WEIGHT_TYPES = (
     'Total',
