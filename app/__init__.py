@@ -1,6 +1,5 @@
-import os
-import secrets
 import sqlite3
+from os import environ
 
 from click import secho
 from flask import (
@@ -9,7 +8,6 @@ from flask import (
 
 from . import (
     api,
-    config,
     db,
     website
 )
@@ -23,7 +21,10 @@ def bail(msg):
 def create_app():
     app = Flask(__name__)
 
-    app.secret_key = secrets.token_urlsafe()
+    app.secret_key = environ.get(
+        'SECRET_KEY',
+        'a2e112dafab36433dab1a5ff173df9ae9f8dcfed854cb4663c0e6af81c3ae3cf'
+    )
     app.teardown_appcontext(db.close_db)
     app.register_blueprint(website.bp)
     app.register_blueprint(api.bp)
@@ -38,8 +39,5 @@ def create_app():
             db.init_db()
         except sqlite3.Error as e:
             bail(e)
-
-    if not os.path.exists(config.DATABASE):
-        db.init()
 
     return app
