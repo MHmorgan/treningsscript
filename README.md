@@ -29,6 +29,13 @@ Training Application
 
 
 
+Cheatsheet
+----------
+
+* `flask routes` - List all routes
+
+
+
 Main Page
 ---------
 
