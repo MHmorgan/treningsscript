@@ -2,7 +2,7 @@ import json
 import sqlite3
 from dataclasses import dataclass
 
-from . import config
+from . import config, db
 from .utils import normalize_date
 from .exceptions import AppError
 
@@ -61,9 +61,10 @@ class Session:
             raise AppError(f'insert session: {e}') from e
 
 
-def new(cur, date, length, daytype):
+def new(date, length, daytype):
     se = Session.new(date, length, daytype)
-    se.db_insert(cur)
+    with db.get_db() as con:
+        se.db_insert(con.cursor())
 
 
 def get_all(cur):

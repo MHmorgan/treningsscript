@@ -1,0 +1,55 @@
+{#
+ ____                _
+/ ___|  ___  ___ ___(_) ___  _ __
+\___ \ / _ \/ __/ __| |/ _ \| '_ \
+ ___) |  __/\__ \__ \ | (_) | | | |
+|____/ \___||___/___/_|\___/|_| |_|
+#}
+
+{% extends "base.html" %}
+
+{% block content %}
+
+
+  <!-- Exercise List -->
+
+
+  <section style="margin-bottom: 7rem">
+    <ul class="list-group list-group-flush">
+
+      {% for ex in exercises %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="me-auto">
+            <div class="fw-bold">{{ ex.name }}</div>
+            <i class="text-secondary">{{ ex.latest_date() }}</i>
+          </div>
+          {#        <span class="badge bg-primary rounded-pill">14</span>#}
+          <a href="/exercise/{{ ex.name }}"
+             class="btn btn-outline-primary btn-sm mt-2 opacity-75">
+            entry <i class="bi bi-arrow-right"></i>
+          </a>
+        </li>
+      {% endfor %}
+
+    </ul>
+  </section>
+
+
+  <!-- Action Buttons -->
+
+
+  <section class="d-flex justify-content-center py-4 fixed-bottom bg-body">
+    <div class="btn-group opacity-75 w-75">
+      <a href="/?finish-session" class="btn btn-outline-success py-3">
+        <i class="bi bi-check-circle"></i> Finish
+      </a>
+      <a href="/exercise" class="btn btn-outline-secondary py-3">
+        <i class="bi bi-plus-circle"></i> Exercise
+      </a>
+      <a href="/?abort-session" class="btn btn-outline-danger py-3">
+        <i class="bi bi-x-circle"></i> Abort
+      </a>
+    </div>
+  </section>
+
+{% endblock %}

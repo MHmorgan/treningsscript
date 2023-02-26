@@ -1,0 +1,42 @@
+{#
+ ___           _
+|_ _|_ __   __| | _____  __
+ | || '_ \ / _` |/ _ \ \/ /
+ | || | | | (_| |  __/>  <
+|___|_| |_|\__,_|\___/_/\_\
+#}
+
+{% extends "base.html" %}
+
+{% block content %}
+  {% if session %}
+    <aside class="alert alert-warning">
+      <span>Active session: {{ session.daytype }}</span>
+      <div class="float-end">
+        <a href="/session" class="link-success me-1">[continue]</a>
+        <a href="/?abort-session" class="link-danger">[abort]</a>
+      </div>
+    </aside>
+  {% endif %}
+
+  <section class="row">
+    {% set btn_common = "btn btn-lg py-3 w-100 opacity-75" %}
+
+    {% for dt in day_types %}
+      <div class="col-md-6 my-2">
+        <a href="/session?daytype={{ dt }}"
+           class="{{ btn_common }} btn-success">
+          {{ dt }}
+        </a>
+      </div>
+    {% endfor %}
+
+    <div class="col-md-6 my-2">
+      <a href="/exercise"
+         class="{{ btn_common }} btn-secondary">
+        Create Exercise
+      </a>
+    </div>
+
+  </section>
+{% endblock %}

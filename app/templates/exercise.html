@@ -1,0 +1,147 @@
+{#
+ _____                   _
+| ____|_  _____ _ __ ___(_)___  ___
+|  _| \ \/ / _ \ '__/ __| / __|/ _ \
+| |___ >  <  __/ | | (__| \__ \  __/
+|_____/_/\_\___|_|  \___|_|___/\___|
+#}
+
+{% extends "base.html" %}
+
+{% block content %}
+
+  <form>
+    <section class="row">
+
+
+      <!-- Name -->
+
+
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="ex-name">Name</label>
+          <input id="ex-name"
+                 type="text"
+                 class="form-control"
+                 oninput="validateForm()"
+          />
+          <div class="invalid-feedback">
+            Invalid name.
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Daytype -->
+
+
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <select id="ex-daytype"
+                  class="form-select"
+                  onchange="validateForm()"
+                  aria-label="select-weighttype">
+            <option value="" selected disabled>-- daytype --</option>
+            {% for dt in day_types %}
+              <option value="{{ dt }}">{{ dt }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+
+      <!-- Weighttype -->
+
+
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <select id="ex-weighttype"
+                  class="form-select"
+                  onchange="validateForm()"
+                  aria-label="select-weighttype">
+            <option value="" selected disabled>-- weighttype --</option>
+            {% for wt in weight_types %}
+              <option value="{{ wt }}">{{ wt }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- Buttons -->
+
+
+    <div>
+      <button id="submit-button"
+              type="button"
+              class="btn btn-outline-success opacity-75"
+              onclick="addEntry()"
+              disabled>
+        Add Entry
+      </button>
+      <button type="button"
+              class="btn btn-outline-danger opacity-75"
+              onclick="window.location = '/session'">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+
+  <script>
+      function getVal(id) {
+          return document.getElementById(id).value || undefined;
+      }
+
+
+      function validateForm() {
+          const name = document.getElementById("ex-name");
+          const daytype = getVal("ex-daytype");
+          const weighttype = getVal("ex-weighttype");
+
+          const existingNames = [
+              {% for name in exercise_names -%}
+                  "{{ name }}",
+              {% endfor %}
+          ];
+          const button = document.getElementById("submit-button");
+
+          if (existingNames.includes(name.value)) {
+              name.classList.toggle("is-invalid", true);
+              button.disabled = true;
+          } else {
+              name.classList.toggle("is-invalid", false);
+              button.disabled = !(name.value && daytype && weighttype);
+          }
+      }
+
+
+      async function addEntry() {
+          const name = getVal("ex-name");
+          const daytype = getVal("ex-daytype");
+          const weighttype = getVal("ex-weighttype");
+
+          const res = await fetch(`/api/exercises`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  name: name,
+                  daytype: daytype,
+                  weighttype: weighttype
+              })
+          });
+
+          if (res.ok) {
+              window.location = "/session";
+          } else {
+              const text = await res.text();
+              alert(`${res.status} ${res.statusText}: ${text}`);
+          }
+      }
+  </script>
+
+{% endblock %}

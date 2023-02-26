@@ -7,7 +7,7 @@ docker:
 	docker run --rm -p 8000:8000 $(IMG)
 
 flask:
-	flask --debug run
+	flask --debug run -p 8000
 
 run:
 	gunicorn -w 4 'app:create_app()'

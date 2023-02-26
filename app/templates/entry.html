@@ -1,0 +1,105 @@
+{#
+ _____       _
+| ____|_ __ | |_ _ __ _   _
+|  _| | '_ \| __| '__| | | |
+| |___| | | | |_| |  | |_| |
+|_____|_| |_|\__|_|   \__, |
+                      |___/
+#}
+
+{% extends "base.html" %}
+
+{% block content %}
+
+  <form>
+    <section class="row">
+
+      {% macro input(name, type, value=None, unit=None, placeholder=None) -%}
+        <div class="col-md-6">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="{{ name }}">{{ name }}</label>
+            <input id="{{ name }}"
+                   type="{{ type }}"
+                   class="form-control"
+                   {% if value %}value="{{ value }}"{% endif %}
+                   {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+            />
+            {%- if unit %}
+              <span class="input-group-text">{{ unit }}</span>
+            {%- endif %}
+          </div>
+        </div>
+      {%- endmacro %}
+
+      {% if exercise.daytype == "Cardio" %}
+        {{ input("Reps", "number", unit="min", placeholder=exercise.latest_reps()) }}
+        {{ input("Sets", "number", unit="intervals", placeholder=exercise.latest_sets()) }}
+      {% else %}
+        {{ input("Reps", "number", placeholder=exercise.latest_reps()) }}
+        {{ input("Sets", "number", placeholder=exercise.latest_sets()) }}
+        {{ input("Weight", "number", unit="kg", placeholder=exercise.latest_weight()) }}
+        {{ input("1RM", "number", placeholder=exercise.latest_onerepmax()) }}
+      {% endif %}
+    </section>
+
+
+    <!-- Buttons -->
+
+
+    <section class="d-flex justify-content-center py-4">
+      <div class="btn-group opacity-75 w-100">
+        <button type="button"
+                class="btn btn-outline-success py-3 w-75"
+                onclick="addEntry()">
+          <i class="bi bi-plus-circle"></i> Add
+        </button>
+        <a type="button"
+           class="btn btn-outline-danger py-3 w-25"
+           href="/session">
+          Cancel
+        </a>
+      </div>
+    </section>
+
+  </form>
+
+  <script>
+      function getVal(id) {
+          return document.getElementById(id)?.value || undefined;
+      }
+
+      async function addEntry() {
+          const reps = getVal("Reps");
+          const sets = getVal("Sets");
+          const weight = getVal("Weight");
+          const onerepmax = getVal("1RM");
+
+          if (!reps || !sets) {
+              alert("Please enter a value for reps and sets");
+              return;
+          }
+
+          const res = await fetch(`/api/exercises/{{ name }}`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  date: new Date(),
+                  reps: reps,
+                  sets: sets,
+                  weight: weight,
+                  onerepmax: onerepmax
+              })
+          });
+
+          if (res.ok) {
+              window.location = "/session";
+          } else {
+              const txt = await res.text();
+              alert(`${res.status} ${res.statusText}: ${txt}`)
+          }
+      }
+  </script>
+
+{% endblock %}
