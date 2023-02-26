@@ -7,12 +7,18 @@ from flask import (
     render_template,
     request,
     session as flask_session,
+    send_file,
 )
 
 from . import config, exercise, session
 from .utils import normalize_date
 
 bp = Blueprint('website', __name__)
+
+
+@bp.route('/favicon.ico')
+def favicon():
+    return send_file('static/favicon.ico')
 
 
 @bp.route('/')
