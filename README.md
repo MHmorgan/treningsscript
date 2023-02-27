@@ -13,19 +13,21 @@ Training Application
   and analytics.
 
 
-    Endpoint                Methods  Rule
-    ----------------------  -------  ------------------------------
-    api.add_exercise        POST     /api/exercises
-    api.add_exercise_entry  POST     /api/exercises/<exercise_name>
-    api.add_session         POST     /api/sessions
-    api.all_exercises       GET      /api/exercises
-    api.all_sessions        GET      /api/sessions
-    api.get_exercise        GET      /api/exercises/<exercise_name>
-    static                  GET      /static/<path:filename>
-    website.entry_page      GET      /exercise/<name>
-    website.exercise_page   GET      /exercise
-    website.index           GET      /
-    website.session_page    GET      /session
+```
+Endpoint                Methods  Rule
+----------------------  -------  ------------------------------
+api.add_exercise        POST     /api/exercises
+api.add_exercise_entry  POST     /api/exercises/<exercise_name>
+api.add_session         POST     /api/sessions
+api.all_exercises       GET      /api/exercises
+api.all_sessions        GET      /api/sessions
+api.get_exercise        GET      /api/exercises/<exercise_name>
+static                  GET      /static/<path:filename>
+website.entry_page      GET      /exercise/<name>
+website.exercise_page   GET      /exercise
+website.index           GET      /
+website.session_page    GET      /session
+```
 
 
 
