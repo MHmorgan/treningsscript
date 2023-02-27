@@ -3,7 +3,7 @@
 # Docker file with gunicorn?
 # https://github.com/tiangolo/uvicorn-gunicorn-docker
 
-FROM --platform=$BUILDPLATFORM python:3.11-alpine
+FROM python:3.11-alpine
 
 ENV DATABASE="/data/trapp.sqlite"
 
