@@ -12,7 +12,7 @@ NAME=trapp
 ARGS=--rm -p 8000:8000 -v $(shell pwd):/data
 
 build:
-	docker build -t $(NAME) .
+	docker build --tag $(NAME):dev .
 
 docker:
 	docker run $(ARGS) $(NAME)
