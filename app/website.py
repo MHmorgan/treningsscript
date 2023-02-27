@@ -40,10 +40,10 @@ def index():
 
 @bp.route('/session')
 def session_page():
-    if 'daytype' in request.args:
-        start_session(request.args['daytype'])
-
     if 'session' in flask_session:
+        s = flask_session['session']
+    elif 'daytype' in request.args:
+        start_session(request.args['daytype'])
         s = flask_session['session']
     else:
         return redirect('/')
