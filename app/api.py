@@ -62,7 +62,7 @@ def add_exercise_entry(exercise_name):
             data['reps'],
             data['sets'],
             data.get('weight'),
-            data.get('onerepmax')
+            data.get('rpe')
         )
     except KeyError as e:
         return f'exercise entry missing: {e}', 400

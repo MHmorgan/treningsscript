@@ -14,9 +14,15 @@
   <form>
     <section class="row">
 
-      {% macro input(name, type, value=None, unit=None, placeholder=None) -%}
+      {% macro input(name, type, value=None, unit=None, placeholder=None, tooltip=None) -%}
         <div class="col-md-6">
-          <div class="input-group mb-3">
+          <div class="input-group mb-3"
+              {% if tooltip %}
+               data-bs-toggle="tooltip"
+               data-bs-placement="top"
+               title="{{ tooltip }}"
+              {% endif %}
+          >
             <label class="input-group-text" for="{{ name }}">{{ name }}</label>
             <input id="{{ name }}"
                    type="{{ type }}"
@@ -38,7 +44,7 @@
         {{ input("Reps", "number", placeholder=exercise.latest_reps()) }}
         {{ input("Sets", "number", placeholder=exercise.latest_sets()) }}
         {{ input("Weight", "number", unit="kg", placeholder=exercise.latest_weight()) }}
-        {{ input("1RM", "number", placeholder=exercise.latest_onerepmax()) }}
+        {{ input("RPE", "number", placeholder=exercise.latest_rpe(), tooltip="Rate of Perceived Exertion") }}
       {% endif %}
     </section>
 
@@ -72,7 +78,7 @@
           const reps = getVal("Reps");
           const sets = getVal("Sets");
           const weight = getVal("Weight");
-          const onerepmax = getVal("1RM");
+          const rpe = getVal("RPE");
 
           if (!reps || !sets) {
               alert("Please enter a value for reps and sets");
@@ -89,7 +95,7 @@
                   reps: reps,
                   sets: sets,
                   weight: weight,
-                  onerepmax: onerepmax
+                  rpe: rpe
               })
           });
 
