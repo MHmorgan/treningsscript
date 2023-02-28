@@ -44,7 +44,7 @@
         {{ input("Reps", "number", placeholder=exercise.latest_reps()) }}
         {{ input("Sets", "number", placeholder=exercise.latest_sets()) }}
         {{ input("Weight", "number", unit="kg", placeholder=exercise.latest_weight()) }}
-        {{ input("RPE", "number", placeholder=exercise.latest_rpe(), tooltip="Rate of Perceived Exertion") }}
+        {{ input("RR", "number", placeholder=exercise.latest_reps_in_reserve(), tooltip="Reps in Reserve") }}
       {% endif %}
     </section>
 
@@ -78,7 +78,7 @@
           const reps = getVal("Reps");
           const sets = getVal("Sets");
           const weight = getVal("Weight");
-          const rpe = getVal("RPE");
+          const rr = getVal("RR");
 
           if (!reps || !sets) {
               alert("Please enter a value for reps and sets");
@@ -95,7 +95,7 @@
                   reps: reps,
                   sets: sets,
                   weight: weight,
-                  rpe: rpe
+                  reps_in_reserve: rr
               })
           });
 

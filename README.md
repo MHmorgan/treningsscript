@@ -110,7 +110,7 @@ API
       "reps": int
       "sets": int
       "weight": int?
-      "rpe": int?
+      "reps_in_reserve": int?
     }
   ]
 }

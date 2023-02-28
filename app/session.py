@@ -67,14 +67,15 @@ def new(date, length, daytype):
         se.db_insert(con.cursor())
 
 
-def get_all(cur):
+def get_all():
     sql = '''
         SELECT ROWID as id, *
         FROM Sessions
         ORDER BY date DESC
     '''
-    cur.execute(sql)
-    return [
-        Session.from_row(row)
-        for row in cur.fetchall()
-    ]
+    with db.get_con() as con:
+        cur = con.execute(sql)
+        return [
+            Session.from_row(row)
+            for row in cur.fetchall()
+        ]

@@ -82,13 +82,13 @@ class Exercise(UserDict):
             return entry.get('weight', '')
         return ''
 
-    def latest_rpe(self):
+    def latest_reps_in_reserve(self):
         """Return the one rep max of the latest entry."""
         if entry := self.latest_entry:
-            return entry.get('rpe', '')
+            return entry.get('reps_in_reserve', '')
         return ''
 
-    def add_entry(self, date, reps, sets, weight=None, rpe=None):
+    def add_entry(self, date, reps, sets, weight=None, reps_in_reserve=None):
         try:
             reps = int(reps)
             sets = int(sets)
@@ -101,7 +101,7 @@ class Exercise(UserDict):
             'weight': weight,
             'reps': reps,
             'sets': sets,
-            'rpe': rpe,
+            'reps_in_reserve': reps_in_reserve,
         })
 
     def db_insert(self, cur: sqlite3.Cursor):
@@ -196,7 +196,7 @@ def get(name):
     return Exercise.from_row(row)
 
 
-def add_entry(name, date, reps, sets, weight=None, rpe=None):
+def add_entry(name, date, reps, sets, weight=None, reps_in_reserve=None):
     """
     Adds an entry to the exercise with the given name.
     Raises AppError if no such exercise exists.
@@ -210,5 +210,5 @@ def add_entry(name, date, reps, sets, weight=None, rpe=None):
             ex = Exercise.from_row(row)
         else:
             raise AppError(f'No exercise named {name}')
-        ex.add_entry(date, reps, sets, weight, rpe)
+        ex.add_entry(date, reps, sets, weight, reps_in_reserve)
         ex.db_update(cur)

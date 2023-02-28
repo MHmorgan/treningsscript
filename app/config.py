@@ -2,7 +2,7 @@
 from os import environ
 from datetime import datetime
 
-APP_VERSION = '1.0.0'
+APP_VERSION = '1.1.0'
 SCHEMA_VERSION = 0
 
 DATABASE = environ.get('DATABASE', 'db.sqlite')

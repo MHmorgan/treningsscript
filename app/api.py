@@ -62,7 +62,7 @@ def add_exercise_entry(exercise_name):
             data['reps'],
             data['sets'],
             data.get('weight'),
-            data.get('rpe')
+            data.get('reps_in_reserve')
         )
     except KeyError as e:
         return f'exercise entry missing: {e}', 400
@@ -76,9 +76,7 @@ def add_exercise_entry(exercise_name):
 
 @bp.route('/sessions')  # Date range?
 def all_sessions():
-    with db.cursor() as cur:
-        ses = session.get_all(cur)
-    return [s.data for s in ses]
+    return [s.data for s in session.get_all()]
 
 
 @bp.route('/sessions', methods=['POST'])
