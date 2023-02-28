@@ -15,7 +15,4 @@ build:
 	docker build --tag $(NAME):dev .
 
 docker:
-	docker run $(ARGS) $(NAME)
-
-init:
-	docker run $(ARGS) $(NAME) flask init
+	docker run $(ARGS) $(NAME):dev
