@@ -1,11 +1,18 @@
 
-CREATE TABLE Exercises (
+CREATE TABLE IF NOT EXISTS Meta (
+    key TEXT PRIMARY KEY,
+    value TEXT
+) WITHOUT ROWID;
+
+
+CREATE TABLE IF NOT EXISTS Exercises (
 	name TEXT PRIMARY KEY,
     daytype TEXT,
 	object NOT NULL
 ) WITHOUT ROWID;
 
-CREATE TABLE Sessions (
+
+CREATE TABLE IF NOT EXISTS Sessions (
     date TEXT NOT NULL,  -- YYYY-MM-DD
     length INTEGER NOT NULL,
     daytype TEXT
