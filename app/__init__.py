@@ -1,13 +1,13 @@
-import sqlite3
 from os import environ
 
-from click import secho
+from click import echo, secho
 from flask import (
     Flask
 )
 
 from . import (
     api,
+    config,
     db,
     website
 )
@@ -25,19 +25,17 @@ def create_app():
         'SECRET_KEY',
         'a2e112dafab36433dab1a5ff173df9ae9f8dcfed854cb4663c0e6af81c3ae3cf'
     )
-    app.teardown_appcontext(db.close_db)
+    app.teardown_appcontext(db.close)
     app.register_blueprint(website.bp)
     app.register_blueprint(api.bp)
 
-    ############################################################################
-    # CLI
+    with app.app_context():
+        db.init()
 
-    @app.cli.command('init')
-    def init():
-        """Initializes the database."""
-        try:
-            db.init_db()
-        except sqlite3.Error as e:
-            bail(e)
+    @app.cli.command('version')
+    def version():
+        """Print version."""
+        echo(f'App version: {config.APP_VERSION}')
+        echo(f'Schema version: {db.get_meta("schema_version") or "?"}')
 
     return app

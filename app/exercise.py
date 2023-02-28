@@ -132,13 +132,13 @@ class Exercise(UserDict):
 
 def new(name, weighttype, daytype):
     ex = Exercise.new(name, daytype, weighttype)
-    with db.get_db() as con:
+    with db.get_con() as con:
         ex.db_insert(con.cursor())
 
 
 def get_all():
     sql = 'SELECT object FROM Exercises ORDER BY name'
-    with db.get_db() as con:
+    with db.get_con() as con:
         cur = con.cursor()
         return [
             Exercise.from_row(row)
@@ -148,7 +148,7 @@ def get_all():
 
 def get_names():
     sql = 'SELECT name FROM Exercises ORDER BY name'
-    with db.get_db() as con:
+    with db.get_con() as con:
         return [row['name'] for row in con.execute(sql)]
 
 
@@ -159,7 +159,7 @@ def get_by_daytype(daytype):
         WHERE daytype = ?
         ORDER BY name
     '''
-    with db.get_db() as con:
+    with db.get_con() as con:
         return [
             Exercise.from_row(row)
             for row in con.execute(sql, (daytype,))
@@ -189,7 +189,7 @@ def get(name):
     Raises AppError if no such exercise exists.
     """
     sql = 'SELECT object FROM Exercises WHERE name = ?'
-    with db.get_db() as con:
+    with db.get_con() as con:
         row = con.execute(sql, (name,)).fetchone()
     if row is None:
         raise AppError(f'No exercise named {name}')
@@ -204,7 +204,7 @@ def add_entry(name, date, reps, sets, weight=None, onerepmax=None):
     date = normalize_date(date)
     sql = 'SELECT object FROM Exercises WHERE name = ?'
 
-    with db.get_db() as con:
+    with db.get_con() as con:
         cur = con.cursor()
         if row := cur.execute(sql, (name,)).fetchone():
             ex = Exercise.from_row(row)

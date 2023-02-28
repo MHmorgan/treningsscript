@@ -63,7 +63,7 @@ class Session:
 
 def new(date, length, daytype):
     se = Session.new(date, length, daytype)
-    with db.get_db() as con:
+    with db.get_con() as con:
         se.db_insert(con.cursor())
 
 

@@ -8,7 +8,7 @@ from flask import current_app, g
 from . import config
 
 
-def get_db() -> sqlite3.Connection:
+def get_con() -> sqlite3.Connection:
     if 'db' not in g:
         sqlite3.threadsafety = 2
         g.db = sqlite3.connect(config.DATABASE)
@@ -16,16 +16,48 @@ def get_db() -> sqlite3.Connection:
     return g.db
 
 
-def close_db(e=None):
+def close(e=None):
     db = g.pop('db', None)
 
     if db is not None:
         db.close()
 
 
-def init_db():
+def init():
     if not (p := Path(config.DATABASE)).exists():
         p.touch()
-    db = get_db()
-    with current_app.open_resource('sql/schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
+    execute_script('schema.sql')
+
+    try:
+        v = int(get_meta('schema_version'))
+    except ValueError:
+        v = -1
+
+    if v < config.SCHEMA_VERSION:
+        set_meta('schema_version', config.SCHEMA_VERSION)
+
+
+def get_meta(key) -> str:
+    con = get_con()
+    cur = con.execute('SELECT value FROM Meta WHERE key = ?', (key,))
+    if row := cur.fetchone():
+        return row['value']
+    return ''
+
+
+def set_meta(key, value):
+    con = get_con()
+    con.execute("INSERT OR REPLACE INTO Meta (key, value) VALUES (?, ?)", (key, value))
+    con.commit()
+
+
+def table_exists(name) -> bool:
+    con = get_con()
+    cur = con.execute("SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?", (name,))
+    return bool(cur.fetchone())
+
+
+def execute_script(fname):
+    con = get_con()
+    with current_app.open_resource('sql/' + fname) as f:
+        con.executescript(f.read().decode('utf8'))
