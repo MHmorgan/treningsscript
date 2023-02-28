@@ -20,12 +20,12 @@
   {% endif %}
 
   <section class="row">
-    {% set btn_common = "btn btn-lg py-3 w-100 opacity-75" %}
+    {% set btn_common = "btn btn-lg py-3 w-100" %}
 
     {% for dt in day_types %}
       <div class="col-md-6 my-2">
         <a href="/session?daytype={{ dt }}"
-           class="{{ btn_common }} btn-success">
+           class="{{ btn_common }} btn-warning">
           {{ dt }}
         </a>
       </div>
@@ -33,7 +33,7 @@
 
     <div class="col-md-6 my-2">
       <a href="/exercise"
-         class="{{ btn_common }} btn-secondary">
+         class="{{ btn_common }} btn-outline-secondary">
         Create Exercise
       </a>
     </div>
