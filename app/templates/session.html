@@ -15,20 +15,17 @@
 
 
   <section style="margin-bottom: 7rem">
-    <ul class="list-group list-group-flush">
+    <ul class="list-group">
 
       {% for ex in exercises %}
-        <li class="list-group-item d-flex justify-content-between align-items-start">
+        <a href="/exercise/{{ ex.name }}"
+           class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
           <div class="me-auto">
             <div class="fw-bold">{{ ex.name }}</div>
             <i class="text-secondary">{{ ex.latest_date() }}</i>
           </div>
-          {#        <span class="badge bg-primary rounded-pill">14</span>#}
-          <a href="/exercise/{{ ex.name }}"
-             class="btn btn-outline-dark btn-sm mt-2">
-            entry <i class="bi bi-arrow-right"></i>
-          </a>
-        </li>
+          <i class="fa-solid fa-arrow-right my-auto"></i>
+        </a>
       {% endfor %}
 
     </ul>

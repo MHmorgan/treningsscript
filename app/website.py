@@ -31,7 +31,7 @@ def index():
         return redirect('/')
 
     context = {
-        'title': 'Trapp',
+        'title': 'TrApp',
         'version': config.APP_VERSION,
         'day_types': config.DAY_TYPES,
         'session': flask_session.get('session'),

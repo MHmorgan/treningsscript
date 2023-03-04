@@ -19,24 +19,25 @@
     </aside>
   {% endif %}
 
-  <section class="row">
-    {% set btn_common = "btn btn-lg py-3 w-100" %}
-
-    {% for dt in day_types %}
-      <div class="col-md-6 my-2">
+  <section>
+    <ul class="list-group p-0">
+      {% for dt in day_types %}
         <a href="/session?daytype={{ dt }}"
-           class="{{ btn_common }} btn-warning">
-          {{ dt }}
+           class="list-group-item list-group-item-action p-4">
+          <div class="fs-4">
+            <i class="fa-solid fa-dumbbell" style="width: 1.5em"></i>
+            {{ dt }}
+          </div>
         </a>
-      </div>
-    {% endfor %}
+      {% endfor %}
 
-    <div class="col-md-6 my-2">
       <a href="/exercise"
-         class="{{ btn_common }} btn-outline-secondary">
-        Create Exercise
+         class="list-group-item list-group-item-light list-group-item-action p-4">
+        <div class="fs-4">
+          <i class="fa-solid fa-plus" style="width: 1.5em"></i>
+          Create Exercise
+        </div>
       </a>
-    </div>
-
+    </ul>
   </section>
 {% endblock %}
