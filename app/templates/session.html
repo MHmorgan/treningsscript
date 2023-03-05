@@ -32,6 +32,10 @@
       </ul>
     {% endif %}
 
+    {% if exercises and core_exercises %}
+      <div class="border-bottom border-warning p-0" style="margin: 2em 25vw"></div>
+    {% endif %}
+
     {% if core_exercises %}
       <ul class="list-group mb-3">
 
@@ -47,6 +51,10 @@
         {% endfor %}
 
       </ul>
+    {% endif %}
+
+    {% if cardio_exercises and (exercises or core_exercises) %}
+      <div class="border-bottom border-warning p-0" style="margin: 2em 25vw"></div>
     {% endif %}
 
     {% if cardio_exercises %}
