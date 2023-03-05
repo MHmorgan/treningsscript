@@ -48,8 +48,49 @@ class Exercise(UserDict):
         """Creates an Exercise object from a database row."""
         return cls(json.loads(row['object']))
 
+    def __str__(self):
+        num_entries = len(self.entries)
+        return f'{self.name}\t{self.daytype}\t{self.weighttype}\t{num_entries} entries'
+
     def to_json(self, **kwargs):
         return json.dumps(self.data, **kwargs)
+
+    def add_entry(self, date, reps, sets, weight=None, reps_in_reserve=None):
+        try:
+            reps = int(reps)
+            sets = int(sets)
+            date = normalize_date(date)
+        except (ValueError, AppError) as e:
+            raise AppError(f'bad exercise entry: {e}') from e
+
+        self['entries'].append({
+            'date': date,
+            'weight': weight,
+            'reps': reps,
+            'sets': sets,
+            'reps_in_reserve': reps_in_reserve,
+        })
+
+    def remove_entry(self, date):
+        try:
+            date = normalize_date(date)
+        except AppError as e:
+            raise AppError(f'bad exercise entry: {e}') from e
+
+        for entry in self['entries']:
+            if entry['date'] == date:
+                self['entries'].remove(entry)
+                break
+
+    @staticmethod
+    def entry_str(entry):
+        """Return a string representation of an entry."""
+        date = entry['date']
+        reps = entry['reps']
+        sets = entry['sets']
+        weight = entry.get('weight', '?')
+        reps_in_reserve = entry.get('reps_in_reserve', '?')
+        return f'{date}\t{reps} reps\t{sets} sets\t{weight} kg\t{reps_in_reserve} rr'
 
     @cached_property
     def latest_entry(self):
@@ -87,22 +128,6 @@ class Exercise(UserDict):
         if entry := self.latest_entry:
             return entry.get('reps_in_reserve', '')
         return ''
-
-    def add_entry(self, date, reps, sets, weight=None, reps_in_reserve=None):
-        try:
-            reps = int(reps)
-            sets = int(sets)
-            date = normalize_date(date)
-        except (ValueError, AppError) as e:
-            raise AppError(f'bad exercise entry: {e}') from e
-
-        self['entries'].append({
-            'date': date,
-            'weight': weight,
-            'reps': reps,
-            'sets': sets,
-            'reps_in_reserve': reps_in_reserve,
-        })
 
     def db_insert(self, cur: sqlite3.Cursor):
         """Inserts the exercise into the database."""
@@ -211,4 +236,23 @@ def add_entry(name, date, reps, sets, weight=None, reps_in_reserve=None):
         else:
             raise AppError(f'No exercise named {name}')
         ex.add_entry(date, reps, sets, weight, reps_in_reserve)
+        ex.db_update(cur)
+
+
+def remove_entry(name, date):
+    """
+    Removes an entry from the exercise with the given name.
+    The entry is identified by the date.
+    Raises AppError if no such exercise exists.
+    """
+    date = normalize_date(date)
+    sql = 'SELECT object FROM Exercises WHERE name = ?'
+
+    with db.get_con() as con:
+        cur = con.cursor()
+        if row := cur.execute(sql, (name,)).fetchone():
+            ex = Exercise.from_row(row)
+        else:
+            raise AppError(f'No exercise named {name}')
+        ex.remove_entry(date)
         ex.db_update(cur)

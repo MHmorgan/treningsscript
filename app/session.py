@@ -28,6 +28,12 @@ class Session:
 
         return cls(date, length, daytype)
 
+    def __str__(self):
+        id = self.id or 'new'
+        h, s = divmod(self.length, 3600)
+        m, s = divmod(s, 60)
+        return f'{id:02}\t{self.daytype}\t{self.date}\t{h:02}h{m:02}m{s:02}s'
+
     @property
     def data(self):
         return {
@@ -79,3 +85,9 @@ def get_all():
             Session.from_row(row)
             for row in cur.fetchall()
         ]
+
+
+def delete(id):
+    sql = 'DELETE FROM Sessions WHERE ROWID=?'
+    with db.get_con() as con:
+        con.execute(sql, (id,))

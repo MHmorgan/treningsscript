@@ -1,21 +1,15 @@
 from os import environ
 
-from click import echo, secho
 from flask import (
     Flask
 )
 
 from . import (
     api,
-    config,
+    cli,
     db,
     website
 )
-
-
-def bail(msg):
-    secho(f'[!!] {msg}', err=True, fg='red')
-    exit(1)
 
 
 def create_app():
@@ -29,13 +23,9 @@ def create_app():
     app.register_blueprint(website.bp)
     app.register_blueprint(api.bp)
 
+    cli.setup(app)
+
     with app.app_context():
         db.init()
-
-    @app.cli.command('version')
-    def version():
-        """Print version."""
-        echo(f'App version: {config.APP_VERSION}')
-        echo(f'Schema version: {db.get_meta("schema_version") or "?"}')
 
     return app
