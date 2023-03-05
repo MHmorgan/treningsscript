@@ -49,10 +49,19 @@ def session_page():
     else:
         return redirect('/')
 
+    cardio_exercises = exercise.get_by_daytype('Cardio')
+    core_exercises = exercise.get_by_daytype('Core')
+    if s['daytype'] not in ('Cardio', 'Core'):
+        exercises = exercise.get_by_daytype(s['daytype'])
+    else:
+        exercises = []
+
     context = {
         'title': s['daytype'],
         'session': s,
-        'exercises': exercise.get_session_exercises(s['daytype']),
+        'exercises': exercises,
+        'cardio_exercises': cardio_exercises,
+        'core_exercises': core_exercises,
     }
     return render_template('session.html', **context)
 
